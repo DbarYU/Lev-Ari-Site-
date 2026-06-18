@@ -35,14 +35,14 @@ export default async function AnalyticsPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Progress & Analytics</h1>
-        <p className="text-sm text-gray-500 mt-1">Your training trends over time</p>
+        <h1 className="text-2xl font-bold text-gray-900">התקדמות ואנליטיקה</h1>
+        <p className="text-sm text-gray-500 mt-1">מגמות האימון שלך לאורך זמן</p>
       </div>
 
       {user.isLevel0Locked ? (
         <Card>
           <p className="text-center text-gray-400 py-8">
-            Analytics will be available once your account is unlocked after your testing workout.
+            האנליטיקה תהיה זמינה לאחר פתיחת החשבון ואימון ההערכה.
           </p>
         </Card>
       ) : (

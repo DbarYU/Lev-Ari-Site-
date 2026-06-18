@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Dumbbell, LayoutDashboard, LineChart, Users, Layers, BookOpen, LogOut, ClipboardList } from "lucide-react";
+import { Dumbbell, LayoutDashboard, LineChart, Users, BookOpen, LogOut, ClipboardList } from "lucide-react";
 import { SessionUser } from "@/types";
 
 interface NavBarProps {
@@ -13,15 +13,15 @@ export function NavBar({ user }: NavBarProps) {
   const router = useRouter();
 
   const traineeLinks = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/workouts", label: "Workouts", icon: Dumbbell },
-    { href: "/analytics", label: "Progress", icon: LineChart },
+    { href: "/dashboard", label: "לוח בקרה", icon: LayoutDashboard },
+    { href: "/workouts", label: "אימונים", icon: Dumbbell },
+    { href: "/analytics", label: "התקדמות", icon: LineChart },
   ];
 
   const adminLinks = [
-    { href: "/admin/trainees", label: "Trainees", icon: Users },
-    { href: "/admin/templates", label: "Workout Templates", icon: ClipboardList },
-    { href: "/admin/programs", label: "Programs", icon: BookOpen },
+    { href: "/admin/trainees", label: "מתאמנים", icon: Users },
+    { href: "/admin/templates", label: "תבניות אימון", icon: ClipboardList },
+    { href: "/admin/programs", label: "תוכניות", icon: BookOpen },
   ];
 
   const links = user.role === "trainee" ? traineeLinks : adminLinks;
@@ -33,10 +33,10 @@ export function NavBar({ user }: NavBarProps) {
   }
 
   return (
-    <nav className="flex h-screen w-60 flex-col border-r border-gray-200 bg-white px-4 py-6">
+    <nav className="flex h-screen w-60 flex-col border-l border-gray-200 bg-white px-4 py-6">
       <div className="mb-8 flex items-center gap-2 px-2">
         <Dumbbell className="h-6 w-6 text-blue-600" />
-        <span className="text-lg font-bold text-gray-900">FitCoach</span>
+        <span className="text-lg font-bold text-gray-900">פורטל אימון</span>
       </div>
 
       <div className="flex-1 space-y-1">
@@ -62,14 +62,14 @@ export function NavBar({ user }: NavBarProps) {
       <div className="border-t border-gray-200 pt-4">
         <div className="px-3 py-2">
           <p className="text-xs font-medium text-gray-900 truncate">{user.displayName}</p>
-          <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+          <p className="text-xs text-gray-500">{user.role === "trainee" ? "מתאמן" : "מנהל"}</p>
         </div>
         <button
           onClick={handleLogout}
           className="mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
         >
           <LogOut className="h-4 w-4" />
-          Sign out
+          יציאה
         </button>
       </div>
     </nav>

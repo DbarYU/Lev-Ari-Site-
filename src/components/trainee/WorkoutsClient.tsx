@@ -25,6 +25,12 @@ const STATUS_BADGE: Record<string, "info" | "success" | "danger"> = {
   missed: "danger",
 };
 
+const STATUS_LABEL: Record<string, string> = {
+  upcoming: "קרוב",
+  completed: "הושלם",
+  missed: "הוחמץ",
+};
+
 export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps) {
   const router = useRouter();
   const [completingId, setCompletingId] = useState<string | null>(null);
@@ -32,7 +38,6 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"upcoming" | "completed">("upcoming");
 
-  // Survey state
   const [rpe, setRpe] = useState(7);
   const [soreness, setSoreness] = useState(3);
   const [injuryFlag, setInjuryFlag] = useState(false);
@@ -63,11 +68,11 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
       if (res.ok) {
         setCompletingId(null);
         if (data.promoted) {
-          alert("Congratulations! You have been promoted to the next level!");
+          alert("כל הכבוד! עלית לרמה הבאה!");
         }
         router.refresh();
       } else {
-        alert(data.error ?? "Failed to mark workout complete");
+        alert(data.error ?? "שגיאה בסימון האימון כהושלם");
       }
     } finally {
       setLoading(false);
@@ -86,7 +91,7 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
               tab === t ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            {t === "upcoming" ? `Upcoming (${upcoming.length})` : `Completed (${completed.length})`}
+            {t === "upcoming" ? `קרובים (${upcoming.length})` : `הושלמו (${completed.length})`}
           </button>
         ))}
       </div>
@@ -94,7 +99,7 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
       {displayed.length === 0 ? (
         <Card>
           <p className="text-center text-gray-400 py-8">
-            {tab === "upcoming" ? "No upcoming workouts." : "No completed workouts yet."}
+            {tab === "upcoming" ? "אין אימונים קרובים." : "טרם הושלמו אימונים."}
           </p>
         </Card>
       ) : (
@@ -108,11 +113,11 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-gray-900">{workout.name}</h3>
                       {workout.isTestingWorkout && (
-                        <Badge variant="warning">Testing</Badge>
+                        <Badge variant="warning">הערכה</Badge>
                       )}
                     </div>
                     <p className="text-sm text-gray-500 mt-0.5">
-                      {new Date(workout.scheduledDate).toLocaleDateString("en-US", {
+                      {new Date(workout.scheduledDate).toLocaleDateString("he-IL", {
                         weekday: "short",
                         month: "short",
                         day: "numeric",
@@ -122,26 +127,22 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant={STATUS_BADGE[workout.status]}>
-                    {workout.status}
+                    {STATUS_LABEL[workout.status]}
                   </Badge>
                   {workout.status === "upcoming" && !isLevel0Locked && !workout.isTestingWorkout && (
-                    <Button
-                      size="sm"
-                      onClick={() => setCompletingId(workout.workoutId)}
-                    >
-                      Mark Done
+                    <Button size="sm" onClick={() => setCompletingId(workout.workoutId)}>
+                      סיימתי
                     </Button>
                   )}
                 </div>
               </div>
 
-              {/* Exercises toggle */}
               <button
                 onClick={() => setExpandedId(expandedId === workout.workoutId ? null : workout.workoutId)}
                 className="mt-3 flex items-center gap-1 text-xs text-blue-600 hover:underline"
               >
                 {expandedId === workout.workoutId ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                {workout.exercises.length} exercise{workout.exercises.length !== 1 ? "s" : ""}
+                {workout.exercises.length} תרגיל{workout.exercises.length !== 1 ? "ים" : ""}
               </button>
 
               {expandedId === workout.workoutId && (
@@ -151,11 +152,9 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
                       <Dumbbell className="h-3.5 w-3.5 text-gray-400 shrink-0" />
                       <span className="font-medium text-gray-800">{ex.name}</span>
                       <span className="text-gray-400">
-                        {ex.durationSeconds
-                          ? `${ex.durationSeconds}s`
-                          : `${ex.sets} × ${ex.reps} reps`}
+                        {ex.durationSeconds ? `${ex.durationSeconds} שניות` : `${ex.sets} × ${ex.reps} חזרות`}
                       </span>
-                      {ex.notes && <span className="text-gray-400 italic text-xs ml-1">— {ex.notes}</span>}
+                      {ex.notes && <span className="text-gray-400 italic text-xs mr-1">— {ex.notes}</span>}
                     </div>
                   ))}
                 </div>
@@ -169,34 +168,34 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
       <Modal
         open={!!completingId}
         onClose={() => setCompletingId(null)}
-        title="Post-Workout Survey"
+        title="סקר לאחר אימון"
       >
         <form onSubmit={handleComplete} className="space-y-5">
           {/* RPE */}
           <div>
             <label className="text-sm font-medium text-gray-700">
-              RPE — Effort Rating <span className="text-gray-400">(1–10)</span>
+              מאמץ נתפס (RPE) <span className="text-gray-400">(1–10)</span>
             </label>
             <div className="flex items-center gap-3 mt-2">
               <input type="range" min={1} max={10} value={rpe} onChange={(e) => setRpe(Number(e.target.value))} className="flex-1 accent-blue-600" />
               <span className="w-8 text-center font-bold text-blue-700 text-lg">{rpe}</span>
             </div>
             <div className="flex justify-between text-xs text-gray-400 mt-1">
-              <span>Very easy</span><span>Maximum effort</span>
+              <span>קל מאוד</span><span>מאמץ מקסימלי</span>
             </div>
           </div>
 
           {/* Muscle Soreness */}
           <div>
             <label className="text-sm font-medium text-gray-700">
-              Muscle Soreness <span className="text-gray-400">(1–5)</span>
+              כאבי שרירים <span className="text-gray-400">(1–5)</span>
             </label>
             <div className="flex items-center gap-3 mt-2">
               <input type="range" min={1} max={5} value={soreness} onChange={(e) => setSoreness(Number(e.target.value))} className="flex-1 accent-purple-600" />
               <span className="w-8 text-center font-bold text-purple-700 text-lg">{soreness}</span>
             </div>
             <div className="flex justify-between text-xs text-gray-400 mt-1">
-              <span>None</span><span>Severe</span>
+              <span>ללא</span><span>חמור</span>
             </div>
           </div>
 
@@ -210,39 +209,38 @@ export function WorkoutsClient({ workouts, isLevel0Locked }: WorkoutsClientProps
               className="h-4 w-4 accent-red-600 rounded"
             />
             <label htmlFor="injuryFlag" className="text-sm font-medium text-gray-700">
-              Flag an injury or pain
+              סמן פציעה או כאב
             </label>
           </div>
 
           {injuryFlag && (
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">Injury Notes <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium text-gray-700">פרטי הפציעה <span className="text-red-500">*</span></label>
               <textarea
                 className="rounded-lg border border-red-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-red-400"
                 value={injuryNotes}
                 onChange={(e) => setInjuryNotes(e.target.value)}
                 rows={2}
-                placeholder="Describe what happened..."
+                placeholder="תאר מה קרה..."
                 required
               />
             </div>
           )}
 
-          {/* General notes */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">General Notes <span className="text-gray-400">(optional)</span></label>
+            <label className="text-sm font-medium text-gray-700">הערות כלליות <span className="text-gray-400">(אופציונלי)</span></label>
             <textarea
               className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              placeholder="How did it go?"
+              placeholder="איך היה האימון?"
             />
           </div>
 
           <div className="flex gap-3 pt-1">
-            <Button type="submit" loading={loading} className="flex-1">Submit & Complete</Button>
-            <Button type="button" variant="outline" onClick={() => setCompletingId(null)}>Cancel</Button>
+            <Button type="submit" loading={loading} className="flex-1">שלח וסמן כהושלם</Button>
+            <Button type="button" variant="outline" onClick={() => setCompletingId(null)}>ביטול</Button>
           </div>
         </form>
       </Modal>

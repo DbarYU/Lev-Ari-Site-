@@ -34,7 +34,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? "Login failed");
+        setError(data.error ?? "כניסה נכשלה");
         return;
       }
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
       }
       router.refresh();
     } catch {
-      setError("Network error. Please try again.");
+      setError("שגיאת רשת. אנא נסה שוב.");
     } finally {
       setLoading(false);
     }
@@ -58,8 +58,8 @@ export default function LoginPage() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 shadow-lg">
             <Dumbbell className="h-7 w-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">FitCoach Portal</h1>
-          <p className="mt-1 text-sm text-gray-500">Who are you signing in as?</p>
+          <h1 className="text-2xl font-bold text-gray-900">פורטל אימון</h1>
+          <p className="mt-1 text-sm text-gray-500">מי אתה?</p>
         </div>
 
         {/* Role selection */}
@@ -72,8 +72,8 @@ export default function LoginPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
                 <ShieldCheck className="h-6 w-6 text-blue-600" />
               </div>
-              <span className="font-semibold text-gray-900">Admin</span>
-              <span className="text-xs text-gray-400 text-center">Coach / Trainer</span>
+              <span className="font-semibold text-gray-900">מנהל</span>
+              <span className="text-xs text-gray-400 text-center">מאמן / מדריך</span>
             </button>
 
             <button
@@ -83,8 +83,8 @@ export default function LoginPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50">
                 <User className="h-6 w-6 text-green-600" />
               </div>
-              <span className="font-semibold text-gray-900">Client</span>
-              <span className="text-xs text-gray-400 text-center">Trainee</span>
+              <span className="font-semibold text-gray-900">מתאמן</span>
+              <span className="text-xs text-gray-400 text-center">לקוח</span>
             </button>
           </div>
         )}
@@ -94,11 +94,11 @@ export default function LoginPage() {
           <div className="rounded-2xl bg-white p-8 shadow-xl">
             <div className="flex items-center gap-2 mb-6">
               <ShieldCheck className="h-5 w-5 text-blue-600" />
-              <h2 className="font-semibold text-gray-900">Admin Sign In</h2>
+              <h2 className="font-semibold text-gray-900">כניסת מנהל</h2>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
-                label="Admin Password"
+                label="סיסמת מנהל"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -113,14 +113,14 @@ export default function LoginPage() {
                 </p>
               )}
               <Button type="submit" loading={loading} className="w-full" size="lg">
-                Sign in as Admin
+                כניסה כמנהל
               </Button>
             </form>
             <button
               onClick={() => { setMode(null); setPassword(""); setError(""); }}
               className="mt-4 w-full text-sm text-gray-400 hover:text-gray-600 transition-colors"
             >
-              ← Back
+              → חזרה
             </button>
           </div>
         )}
@@ -130,11 +130,11 @@ export default function LoginPage() {
           <div className="rounded-2xl bg-white p-8 shadow-xl">
             <div className="flex items-center gap-2 mb-6">
               <User className="h-5 w-5 text-green-600" />
-              <h2 className="font-semibold text-gray-900">Client Sign In</h2>
+              <h2 className="font-semibold text-gray-900">כניסת מתאמן</h2>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
-                label="Email address"
+                label="כתובת אימייל"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -144,7 +144,7 @@ export default function LoginPage() {
                 autoFocus
               />
               <Input
-                label="Password"
+                label="סיסמה"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -158,20 +158,20 @@ export default function LoginPage() {
                 </p>
               )}
               <Button type="submit" loading={loading} className="w-full" size="lg">
-                Sign in
+                כניסה
               </Button>
             </form>
             <button
               onClick={() => { setMode(null); setEmail(""); setPassword(""); setError(""); }}
               className="mt-4 w-full text-sm text-gray-400 hover:text-gray-600 transition-colors"
             >
-              ← Back
+              → חזרה
             </button>
           </div>
         )}
 
         <p className="mt-6 text-center text-xs text-gray-400">
-          Client credentials are provided by your coach.
+          פרטי הכניסה מסופקים על ידי המאמן.
         </p>
       </div>
     </div>
