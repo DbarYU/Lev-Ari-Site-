@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FitCoach Portal",
-  description: "Fitness coaching portal — training programs, workout tracking, and analytics.",
+  title: "פורטל אימון",
+  description: "פורטל אימון כושר — תוכניות אימון, מעקב ואנליטיקה.",
 };
 
 export default function RootLayout({
@@ -24,7 +24,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="he"
+      dir="rtl"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

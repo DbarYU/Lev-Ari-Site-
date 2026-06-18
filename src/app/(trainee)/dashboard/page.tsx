@@ -31,9 +31,9 @@ export default async function DashboardPage() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back, {user.displayName} 👋
+          שלום, {user.displayName} 👋
         </h1>
-        <p className="text-sm text-gray-500 mt-1">Here is your training overview</p>
+        <p className="text-sm text-gray-500 mt-1">סקירת האימונים שלך</p>
       </div>
 
       {user.isLevel0Locked && (
@@ -47,10 +47,10 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5 text-amber-600 shrink-0" />
             <div>
-              <p className="font-semibold text-amber-800">Missed workout{alerts.length > 1 ? "s" : ""}</p>
-              <p className="text-sm text-amber-700">
-                You have {alerts.length} missed workout{alerts.length > 1 ? "s" : ""}. Get back on track!
+              <p className="font-semibold text-amber-800">
+                {alerts.length > 1 ? `${alerts.length} אימונים שלא בוצעו` : "אימון שלא בוצע"}
               </p>
+              <p className="text-sm text-amber-700">חזור למסלול — השלם את האימונים הפתוחים!</p>
             </div>
           </div>
         </Card>
@@ -65,7 +65,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{user.currentLevel}</p>
-              <p className="text-xs text-gray-500">Current Level</p>
+              <p className="text-xs text-gray-500">רמה נוכחית</p>
             </div>
           </div>
         </Card>
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{completed.length}</p>
-              <p className="text-xs text-gray-500">Workouts Done</p>
+              <p className="text-xs text-gray-500">אימונים הושלמו</p>
             </div>
           </div>
         </Card>
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
               <p className="text-2xl font-bold text-gray-900">
                 {user.isLevel0Locked ? "–" : worksToNextLevel}
               </p>
-              <p className="text-xs text-gray-500">To Next Level</p>
+              <p className="text-xs text-gray-500">לרמה הבאה</p>
             </div>
           </div>
         </Card>
@@ -103,7 +103,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{upcoming.length}</p>
-              <p className="text-xs text-gray-500">Upcoming</p>
+              <p className="text-xs text-gray-500">אימונים קרובים</p>
             </div>
           </div>
         </Card>
@@ -113,39 +113,39 @@ export default async function DashboardPage() {
       {nextWorkout && (
         <Card className="mb-6">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Next Workout
+            האימון הבא
           </h2>
           <div className="flex items-center justify-between">
             <div>
               <p className="font-semibold text-gray-900">{nextWorkout.name}</p>
               <p className="text-sm text-gray-500 mt-1">
-                {new Date(nextWorkout.scheduledDate).toLocaleDateString("en-US", {
+                {new Date(nextWorkout.scheduledDate).toLocaleDateString("he-IL", {
                   weekday: "long",
                   month: "long",
                   day: "numeric",
                 })}
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                {nextWorkout.exercises.length} exercises
+                {nextWorkout.exercises.length} תרגילים
               </p>
             </div>
             {nextWorkout.isTestingWorkout && (
-              <Badge variant="warning">Testing Workout</Badge>
+              <Badge variant="warning">אימון הערכה</Badge>
             )}
           </div>
         </Card>
       )}
 
-      {/* Level progress bar (only for active trainees) */}
+      {/* Level progress bar */}
       {!user.isLevel0Locked && (
         <Card>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-            Level Progress
+            התקדמות ברמה
           </h2>
           <div className="flex items-center justify-between text-sm mb-2">
-            <span className="font-medium text-gray-700">Level {user.currentLevel}</span>
+            <span className="font-medium text-gray-700">רמה {user.currentLevel}</span>
             <span className="text-gray-500">
-              {user.completedWorkoutsCount % 2}/2 workouts to Level {user.currentLevel + 1}
+              {user.completedWorkoutsCount % 2}/2 אימונים לרמה {user.currentLevel + 1}
             </span>
           </div>
           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
